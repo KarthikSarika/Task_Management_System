@@ -1,0 +1,53 @@
+{% extends "layouts/base.njk" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto text-center py-20">
+    <h1 class="text-5xl font-extrabold text-gray-900 dark:text-white mb-6 leading-tight">
+        Manage your daily tasks <br/>
+        <span class="text-indigo-600 dark:text-indigo-400">with ease and precision.</span>
+    </h1>
+    <p class="text-xl text-gray-600 dark:text-gray-400 mb-10 max-w-2xl mx-auto">
+        Stay organized, focused, and productive with TaskManager. The ultimate tool for professionals and students to track their progress.
+    </p>
+    
+    <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+        {% if user %}
+            <a href="/dashboard" class="px-8 py-4 bg-indigo-600 text-white rounded-xl text-lg font-bold hover:bg-indigo-700 transition transform hover:-translate-y-1 shadow-lg flex items-center">
+                Go to Dashboard
+                <i data-lucide="chevron-right" class="ml-2 w-5 h-5"></i>
+            </a>
+        {% else %}
+            <a href="/auth/register" class="px-8 py-4 bg-indigo-600 text-white rounded-xl text-lg font-bold hover:bg-indigo-700 transition transform hover:-translate-y-1 shadow-lg">
+                Get Started Free
+            </a>
+            <a href="/auth/login" class="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl text-lg font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                Sign In
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+            <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                <i data-lucide="layout-dashboard" class="w-6 h-6 text-indigo-600 dark:text-indigo-400"></i>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Clean Dashboard</h3>
+            <p class="text-gray-500 dark:text-gray-400">Get a clear overview of your tasks and productivity at a glance.</p>
+        </div>
+        <div class="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+            <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                <i data-lucide="clock" class="w-6 h-6 text-green-600 dark:text-green-400"></i>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Priority Matching</h3>
+            <p class="text-gray-500 dark:text-gray-400">Focus on what matters most with priority-based task sorting.</p>
+        </div>
+        <div class="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                <i data-lucide="calendar" class="w-6 h-6 text-purple-600 dark:text-purple-400"></i>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Due Date Alerts</h3>
+            <p class="text-gray-500 dark:text-gray-400">Never miss a deadline with automated tracking and visual indicators.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

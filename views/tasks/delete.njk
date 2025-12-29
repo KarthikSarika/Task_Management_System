@@ -1,0 +1,25 @@
+{% extends "layouts/base.njk" %}
+
+{% block content %}
+<div class="max-w-md mx-auto py-12">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 text-center">
+        <div class="w-20 h-20 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-6 mx-auto">
+            <i data-lucide="trash" class="w-10 h-10 text-red-600 dark:text-red-400"></i>
+        </div>
+        
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Delete Task?</h1>
+        <p class="text-gray-600 dark:text-gray-400 mb-8">
+            Are you sure you want to delete <span class="font-bold text-gray-900 dark:text-white">"{{ task.title }}"</span>? This action cannot be undone.
+        </p>
+
+        <form action="/tasks/{{ task.id }}/delete" method="POST" class="space-y-4">
+            <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition shadow-lg">
+                Yes, Delete Task
+            </button>
+            <a href="/tasks/{{ task.id }}" class="block w-full text-center py-3 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 font-bold transition">
+                No, Keep It
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

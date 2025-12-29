@@ -1,0 +1,115 @@
+{% extends "layouts/base.njk" %}
+
+{% block content %}
+<div class="space-y-8">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Welcome, {{ user.name }}!</h1>
+            <p class="text-gray-500 dark:text-gray-400">Here's what's happening with your tasks today.</p>
+        </div>
+        <a href="/tasks/create" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg">
+            <i data-lucide="plus" class="w-5 h-5 mr-2"></i>
+            New Task
+        </a>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                    <i data-lucide="list" class="w-6 h-6 text-blue-600 dark:text-blue-400"></i>
+                </div>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Total Tasks</p>
+            <h3 class="text-2xl font-bold mt-1">{{ stats.totalTasks }}</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                    <i data-lucide="clock" class="w-6 h-6 text-yellow-600 dark:text-yellow-400"></i>
+                </div>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Pending</p>
+            <h3 class="text-2xl font-bold mt-1">{{ stats.pendingTasks }}</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                    <i data-lucide="check-circle" class="w-6 h-6 text-green-600 dark:text-green-400"></i>
+                </div>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Completed</p>
+            <h3 class="text-2xl font-bold mt-1">{{ stats.completedTasks }}</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center">
+                    <i data-lucide="layout-dashboard" class="w-6 h-6 text-indigo-600 dark:text-indigo-400"></i>
+                </div>
+                <span class="text-sm font-bold text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-1 rounded">{{ stats.progress }}%</span>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Overall Progress</p>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-3">
+                <div class="bg-indigo-600 h-2 rounded-full transition-all duration-1000" style="width: {{ stats.progress }}%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Today's Tasks & Productivity -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white">Important Tasks</h2>
+                <a href="/tasks" class="text-indigo-600 dark:text-indigo-400 text-sm font-medium hover:underline">View all tasks</a>
+            </div>
+            
+            <div class="space-y-4">
+                {% for task in todayTasks %}
+                    <a href="/tasks/{{ task.id }}" class="block bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500 transition-all transform hover:-translate-y-1 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-2 h-2 rounded-full {% if task.priority == 'HIGH' %}bg-red-500{% elif task.priority == 'MEDIUM' %}bg-yellow-500{% else %}bg-blue-500{% endif %}"></div>
+                                <div>
+                                    <h4 class="font-bold text-gray-900 dark:text-white">{{ task.title }}</h4>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{{ task.description }}</p>
+                                </div>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400"></i>
+                        </div>
+                    </a>
+                {% else %}
+                    <div class="text-center py-12 bg-white dark:bg-gray-800 rounded-2xl border border-dashed border-gray-300 dark:border-gray-600">
+                        <i data-lucide="list" class="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4"></i>
+                        <p class="text-gray-500 dark:text-gray-400">No tasks for today. Take it easy!</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Quick Actions</h2>
+            <div class="grid grid-cols-1 gap-4">
+                <a href="/tasks/create" class="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 flex items-center space-x-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center">
+                        <i data-lucide="plus" class="w-6 h-6 text-indigo-600 dark:text-indigo-400"></i>
+                    </div>
+                    <span class="font-medium">Add New Task</span>
+                </a>
+                <a href="/tasks?status=PENDING" class="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 flex items-center space-x-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <div class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                        <i data-lucide="clock" class="w-6 h-6 text-yellow-600 dark:text-yellow-400"></i>
+                    </div>
+                    <span class="font-medium">View Pending</span>
+                </a>
+                <button id="dark-mode-toggle-btn" class="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 flex items-center space-x-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition w-full text-left">
+                    <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                        <i data-lucide="moon" class="w-6 h-6 text-purple-600 dark:text-purple-400"></i>
+                    </div>
+                    <span class="font-medium">Toggle Appearance</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

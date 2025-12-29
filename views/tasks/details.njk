@@ -1,0 +1,66 @@
+{% extends "layouts/base.njk" %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="mb-8 flex items-center justify-between">
+        <a href="/tasks" class="inline-flex items-center text-gray-500 hover:text-indigo-600 transition">
+            <i data-lucide="chevron-left" class="w-5 h-5 mr-1"></i>
+            Back to List
+        </a>
+        <div class="flex space-x-4">
+            <a href="/tasks/{{ task.id }}/edit" class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 border border-indigo-600 dark:border-indigo-400 rounded-lg font-bold hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition">
+                <i data-lucide="edit" class="w-4 h-4 mr-2"></i>
+                Edit
+            </a>
+            <a href="/tasks/{{ task.id }}/delete" class="inline-flex items-center px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg font-bold hover:bg-red-100 dark:hover:bg-red-900/40 transition">
+                <i data-lucide="trash" class="w-4 h-4 mr-2"></i>
+                Delete
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <div class="h-2 {% if task.priority == 'HIGH' %}bg-red-500{% elif task.priority == 'MEDIUM' %}bg-yellow-500{% else %}bg-blue-500{% endif %}"></div>
+        
+        <div class="p-8">
+            <div class="flex flex-wrap items-center gap-4 mb-6">
+                <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider {% if task.status == 'COMPLETED' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400{% elif task.status == 'IN_PROGRESS' %}bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400{% else %}bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300{% endif %}">
+                    {{ task.status | replace('_', ' ') }}
+                </span>
+                <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                    {{ task.priority }} Priority
+                </span>
+            </div>
+
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-6 uppercase">{{ task.title }}</h1>
+            
+            <div class="prose dark:prose-invert max-w-none mb-12">
+                <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+                    {{ task.description or 'No description provided.' }}
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-gray-50 dark:border-gray-700">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl flex items-center justify-center">
+                        <i data-lucide="calendar" class="w-6 h-6 text-indigo-600 dark:text-indigo-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-widest">Due Date</p>
+                        <p class="text-gray-900 dark:text-white font-bold">{{ task.dueDate | date('MMM D, YYYY') if task.dueDate else 'None' }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-purple-50 dark:bg-purple-900/20 rounded-xl flex items-center justify-center">
+                        <i data-lucide="clock" class="w-6 h-6 text-purple-600 dark:text-purple-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-widest">Created At</p>
+                        <p class="text-gray-900 dark:text-white font-bold">{{ task.createdAt | date('MMM D, YYYY') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

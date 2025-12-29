@@ -1,0 +1,86 @@
+{% extends "layouts/base.njk" %}
+
+{% block content %}
+<div class="space-y-8">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">All Tasks</h1>
+        <a href="/tasks/create" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg">
+            <i data-lucide="plus" class="w-5 h-5 mr-2"></i>
+            New Task
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+        <form action="/tasks" method="GET" class="flex flex-col md:flex-row gap-4">
+            <div class="flex-grow">
+                <input type="text" name="search" value="{{ filters.search }}" placeholder="Search tasks..." 
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
+            </div>
+            <div class="flex gap-4">
+                <select name="status" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                    <option value="">All Statuses</option>
+                    <option value="PENDING" {% if filters.status == 'PENDING' %}selected{% endif %}>Pending</option>
+                    <option value="IN_PROGRESS" {% if filters.status == 'IN_PROGRESS' %}selected{% endif %}>In Progress</option>
+                    <option value="COMPLETED" {% if filters.status == 'COMPLETED' %}selected{% endif %}>Completed</option>
+                </select>
+                <select name="priority" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                    <option value="">All Priorities</option>
+                    <option value="LOW" {% if filters.priority == 'LOW' %}selected{% endif %}>Low</option>
+                    <option value="MEDIUM" {% if filters.priority == 'MEDIUM' %}selected{% endif %}>Medium</option>
+                    <option value="HIGH" {% if filters.priority == 'HIGH' %}selected{% endif %}>High</option>
+                </select>
+                <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700 transition">
+                    Filter
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Task Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for task in tasks %}
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all relative overflow-hidden group">
+                <div class="absolute top-0 left-0 w-1 h-full {% if task.priority == 'HIGH' %}bg-red-500{% elif task.priority == 'MEDIUM' %}bg-yellow-500{% else %}bg-blue-500{% endif %}"></div>
+                
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-bold uppercase tracking-wider px-2 py-1 rounded {% if task.status == 'COMPLETED' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400{% elif task.status == 'IN_PROGRESS' %}bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400{% else %}bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300{% endif %}">
+                        {{ task.status | replace('_', ' ') }}
+                    </span>
+                    <div class="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <a href="/tasks/{{ task.id }}/edit" class="text-gray-400 hover:text-indigo-600 transition">
+                            <i data-lucide="edit" class="w-4 h-4"></i>
+                        </a>
+                        <a href="/tasks/{{ task.id }}/delete" class="text-gray-400 hover:text-red-600 transition">
+                            <i data-lucide="trash" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{{ task.title }}</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mb-6 line-clamp-2">{{ task.description or 'No description provided.' }}</p>
+
+                <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-50 dark:border-gray-700">
+                    <div class="flex items-center text-xs text-gray-400">
+                        <i data-lucide="calendar" class="w-4 h-4 mr-1"></i>
+                        {{ task.dueDate | date('MMM D, YYYY') if task.dueDate else 'No due date' }}
+                    </div>
+                    <a href="/tasks/{{ task.id }}" class="text-indigo-600 dark:text-indigo-400 font-bold text-sm flex items-center hover:underline">
+                        Details
+                        <i data-lucide="chevron-right" class="ml-1 w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-span-full text-center py-20 bg-white dark:bg-gray-800 rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700">
+                <i data-lucide="list" class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-6"></i>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">No tasks found</h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-8">Try adjusting your filters or create a new task to get started.</p>
+                <a href="/tasks/create" class="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg">
+                    Create Your First Task
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
